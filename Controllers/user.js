@@ -16,10 +16,11 @@ exports.signup = (req, res, next) =>{
         user
         .save()
         .then((response) =>{
-            const newUser = response.toObject()
-            delete newUser.password,
+           //  const newUser = response.toObject()
+           //  delete newUser.password,
+         const publicUser = response.toPublic();
             res.status(201).json({
-                model: newUser,
+                model: publicUser,
                 message: "Utlisateur créé !",
             })
            

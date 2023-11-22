@@ -9,6 +9,10 @@ const bookSchema = mongoose.Schema ({
     },
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     publicationYear :  {type : Number,required: false}
-})
+});
+
+bookSchema.statics.findByAuthor = function (authorId) {
+    return this.find({ author: authorId });
+};
 
 module.exports = mongoose.model("Book",bookSchema)
