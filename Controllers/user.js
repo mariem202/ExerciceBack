@@ -25,7 +25,12 @@ exports.signup = (req, res, next) =>{
             })
            
         })
-        .catch((error) =>res.status(400).json({error: error.message})
+        .catch((error) =>{
+            // Handle unique validation error for the email field
+            if (error && error.errors && error.errors.email && error.errors.email.kind === "unique") {
+                return res.status(400).json({ message: "Email must be unique." });
+            }
+        } //res.status(400).json({error: error.message})
         
         )
 

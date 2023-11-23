@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const Joi = require('joi');
 const User = require("../models/user")
 module.exports.loggedMiddleware = (req, res, next) => {
   try {
@@ -47,3 +48,23 @@ module.exports.isAdmin=(req, res, next) => {
   }
 
 }
+
+
+// Middleware de validation avec Joi
+
+module.exports. validateSignup = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    LastName: Joi.string().required(),
+    firstName: Joi.string().required(),
+    role: Joi.string().valid('admin', 'user').required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  next(); // Passez à la prochaine étape du traitement
+};

@@ -152,6 +152,44 @@ const postBook = (req,res)=> {
   };
   
   
+ const create = async (req, res) => {
+    try {
+      // Créer une instance du livre avec les données de la requête
+      const newLivre = new book(req.body);
+
+      /*const newLivre = new livre({(req.body)
+        Titre: req.body.Titre,
+        Éditeur: req.body.Éditeur,
+        Date_publication: req.body.Date_publication,
+        Prix: req.body.Prix,
+        Nombre_pages: req.body.Nombre_pages,
+        Langue: req.body.Langue,
+        Auteur: req.body.Auteur,
+        Category: req.body.Category,
+      });*/
+  
+      // Valider le livre avec mongoose
+      await newLivre.validate();
+  
+      
+      const authorId = req.body.author;
+      const authors = await author.findById(authorId);
+      const hasPreviousBooks = await book.countDocuments({ author: authorId }) > 0;
+  
+      if (authors && hasPreviousBooks) {
+      
+        const savedLivre = await newLivre.save();
+        res.status(201).json(savedLivre);
+      } else {
+        res.status(400).json({ message: "L'auteur doit avoir écrit d'autres livres avant de créer celui-ci 🙂." });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du livre :", error.message);
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+
 const deleteBook =(req,res) => {
     book.deleteOne({_id : req.params.id}).then (()=> {
         res.status(200).json({
@@ -468,7 +506,8 @@ module.exports={
     ajouter:ajouter,
     countBooks:countBooks,
     addBookAndGetList:addBookAndGetList,
-    getTaskById:getTaskById
+    getTaskById:getTaskById,
+    create:create
    // replaceBookByTitle:replaceBookByTitle
 }
 

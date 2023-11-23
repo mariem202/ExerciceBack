@@ -1,4 +1,7 @@
 const mongoose = require("mongoose")
+const uniqueValidator = require("mongoose-unique-validator");
+const IdValidator = require("mongoose-id-validator");
+
 const userSchema = mongoose.Schema ({
     email : {type :String , required: true,unique:true},
     password : {type: String, required : true},
@@ -11,6 +14,8 @@ const userSchema = mongoose.Schema ({
     toObject: { virtuals: true }
   })
 
+  userSchema.plugin(uniqueValidator);
+  userSchema.plugin(IdValidator);
 
 // Adding a virtual field "name"
 userSchema.virtual("name").get(function () {

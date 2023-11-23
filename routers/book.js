@@ -16,6 +16,7 @@ router.delete("/DeleteBook/:id",auth.loggedMiddleware,bookController.deleteBook)
 //router.get("/putbook",bookController.replaceBookByTitle)
 
 router.post("/AddBookGETLIST",bookController.addBookAndGetList)
+router.post("/create",bookController.create)
 
 
 router.post("/poot/",bookController.ajouter)
